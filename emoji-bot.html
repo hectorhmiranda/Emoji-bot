@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>EnergyChatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    df-messenger { width: 100%; height: 100%; z-index: 9999; }
+  </style>
+</head>
+<body>
+  <df-messenger
+    intent="WELCOME"
+   chat-title="Bot-emojis"
+  agent-id="ef0866b5-d1b0-491c-8a67-9a9a098fdce5"
+    language-code="en">
+  </df-messenger>
+
+ <script>
+  (function () {
+    function openES() {
+      const df = document.querySelector('df-messenger');
+      const launcher = df && df.shadowRoot && df.shadowRoot.querySelector('df-messenger-launcher');
+      const btn = launcher && launcher.shadowRoot && launcher.shadowRoot.querySelector('button');
+      if (btn) { btn.click(); return true; }
+      return false;
+    }
+
+    function openCX() {
+      const bubble = document.querySelector('df-messenger-chat-bubble');
+      if (bubble && typeof bubble.openChat === 'function') { bubble.openChat(); return true; }
+      return false;
+    }
+
+    function tryOpen(attempts = 0) {
+      if (openCX() || openES()) return;
+      if (attempts > 50) return;            // stop after ~10s
+      setTimeout(() => tryOpen(attempts + 1), 200);
+    }
+
+    window.addEventListener('load', () => {
+      if (window.customElements?.whenDefined) {
+        customElements.whenDefined('df-messenger').then(() => tryOpen());
+      } else {
+        tryOpen();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
